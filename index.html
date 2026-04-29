@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TTRPG Skill Tree</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<style>
+body { margin:0; background:#111; color:#eee; font-family:Arial; }
+#network { width:100vw; height:100vh; }
+</style>
+</head>
+
+<body>
+<div id="network"></div>
+
+<script>
+const abilities = [
+{ id:"start", label:"Start", tier:0, prereq:[] },
+{ id:"race", label:"Race Choice", tier:1, prereq:["start"] },
+{ id:"class", label:"Class Choice", tier:1, prereq:["start"] },
+{ id:"skill1", label:"Skill 1", tier:2, prereq:["class"] },
+{ id:"skill2", label:"Skill 2", tier:2, prereq:["race"] }
+];
+
+const nodes = new vis.DataSet();
+const edges = new vis.DataSet();
+
+abilities.forEach(a=>{
+nodes.add({
+id:a.id,
+label:a.label,
+level:a.tier
+});
+
+a.prereq.forEach(p=>{
+edges.add({from:p,to:a.id,arrows:"to"});
+});
+});
+
+const network = new vis.Network(
+document.getElementById("network"),
+{nodes:nodes, edges:edges},
+{
+layout:{hierarchical:{direction:"LR"}},
+physics:false
+}
+);
+</script>
+</body>
+</html>
